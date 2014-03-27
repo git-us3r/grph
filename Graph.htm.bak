@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang = "en-US">
+<head>
+	<meta charset = "UTF-8">
+	<title>Graph</title>
+
+	<script src = "Vertex.js"></script>
+	<script src = "Graph.js"></script>
+	
+	
+	<script>
+	
+		var g = Graph();
+		g.build();
+		
+		g.singleSourceSPS(0);
+		
+		console.log(g);
+		
+	
+	</script>
+	
+
+	<!-- <link rel = "stylesheet" type = "text/css" href = "styles/asteroidsTest1.css"> -->
+</head>
+<body>
+	<canvas id = "canvas" width = "600" height = "600"></canvas>
+</body>
+</html>

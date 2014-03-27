@@ -1,0 +1,6 @@
+var Vertex = function(key){
+
+	var that = {};
+	
+	
+};

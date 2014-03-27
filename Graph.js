@@ -1,0 +1,125 @@
+var Graph = function(){
+
+	var that = {};
+	
+	that.V = [];
+	
+	// algorithms
+	that.build = function(){
+	
+		for (var i = 0; i < 10; i++){
+		
+			// Index vertices by i
+			that.V.push(Vertex(i));	
+		}
+		
+		// arbitrary graph .... Factory Pattern?
+		that.V[0].neighbors.push(that.V[2], that.V[4] , that.V[9]);
+		that.V[1].neighbors.push(that.V[3], that.V[4] );
+		that.V[2].neighbors.push(that.V[0]);
+		that.V[3].neighbors.push(that.V[1], that.V[5] , that.V[8]);
+		that.V[4].neighbors.push(that.V[0], that.V[1] , that.V[9]);
+		that.V[5].neighbors.push(that.V[3], that.V[6]);
+		that.V[6].neighbors.push(that.V[5]);
+		that.V[7].neighbors.push(that.V[9]);
+		that.V[8].neighbors.push(that.V[3]);
+		that.V[9].neighbors.push(that.V[0], that.V[4] , that.V[7]);
+	};
+		
+		
+		
+	 function bfs_singleSource(srcKey){
+		
+		var level = {},
+			parent = {},
+			frontier = [],
+			next = [],
+			ctr = 0;
+			
+		level[srcKey] = 0;
+		parent[srcKey] = null;
+		frontier.push(that.V[srcKey]);
+		
+		
+		// Explore all vertices reachable from sourceV and implicitly create sh-pth-trees (via parent).
+		while (frontier.length > 0){
+		
+			next = [];						// Empty next
+			
+			for (var i = 0; i < frontier.length; i++){
+				
+				var u = frontier[i];
+			
+				for(var j = 0; j < u.neighbors.length; j++){
+					
+					var neighbor = u.neighbors[j];
+					
+					// if sourceV is NOT in level
+					if(!level.hasOwnProperty(neighbor.key)){
+					
+						level[neighbor.key]= ctr;			// index its level
+						parent[neighbor.key] = u;	
+						next.push(neighbor);
+						
+					}
+				}
+			}			// When the outter for ends, all vertices in frontier have been explored: all the neighbors are included into next.
+			
+			frontier = next;
+			ctr++;
+		}
+		// Trees exist (implicitly)				
+		
+		
+		return {
+			parent : parent
+		};
+	}
+	
+	
+	that.singleSourceSPS = function(src){
+	
+		var parents = bfs_singleSource(src).parent,
+			sp = {},
+			parent = null;
+			
+		// confirm or break
+		if (parents[src] !== null){
+		
+			console.log('src is not root');
+			return;
+		}
+		
+		
+		that.V.forEach(function(vertex, index, array){
+		
+			sp[vertex.key] = [];
+			sp[vertex.key].push(vertex);
+			
+			parent = parents[vertex.key];
+			
+			
+			while (parent !== null){
+			
+				sp[vertex.key].push(parent);
+				parent = parents[parent.key];
+			}
+			
+		});		
+
+		// An object with a key for every vertex except src.
+		// Each key corresponds to an array which begins with the node corresponding to the key,
+		// and ends with src.
+		// Thus, reading the array backwards results in a shortest path tree from src to the vertex
+		// corresponding to the current key.
+		/////
+		return sp;		
+	};
+		
+		
+		
+			
+	return that;
+				
+};
+
